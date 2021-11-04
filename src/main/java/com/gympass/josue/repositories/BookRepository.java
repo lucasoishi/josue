@@ -13,5 +13,6 @@ public interface BookRepository extends CrudRepository<Book, String> {
     public Optional<Book> findById(UUID id);
     public boolean existsById(UUID id);
     public void deleteById(UUID id);
-    public List<Book> findByAuthor(String name);
+    public List<Book> findByAuthor(String author);
+    public List<Book> findByName(String name);
 }
