@@ -36,6 +36,7 @@ public class BookService {
                 : new ResponseEntity<>(book, HttpStatus.NOT_FOUND);
     }
 
+    @Transactional
     public Book createBook(BookCreationRequest bookRequest) {
         Book book = Book.fromBookCreationRequest(bookRequest);
         return bookRepository.save(book);
@@ -46,6 +47,7 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
+    @Transactional
     public ResponseEntity<Optional<Book>> createOrUpdateBook(UUID id, Book book) {
         book.setId(id);
         return (bookRepository.existsById(id))
@@ -53,6 +55,7 @@ public class BookService {
                 : new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND);
     }
 
+    @Transactional
     public ResponseEntity<?> updateBookName(UUID id, NameUpdateRequest update) {
         var book = bookRepository.findById(id);
         if (book.isPresent()) {
