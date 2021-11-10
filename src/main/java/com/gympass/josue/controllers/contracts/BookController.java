@@ -21,7 +21,7 @@ public interface BookController {
 
     ResponseEntity<Optional<Book>> getBookById(@PathVariable UUID id);
 
-    Book postBook(@RequestBody @Valid BookCreationRequest coffee);
+    Book postBook(@RequestBody @Valid BookCreationRequest book);
 
     ResponseEntity<Optional<Book>> putBook(@PathVariable UUID id,
                                            @Valid @RequestBody Book book);

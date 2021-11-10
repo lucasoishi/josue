@@ -34,8 +34,8 @@ public class BookControllerImpl implements BookController {
     }
 
     @PostMapping
-    public Book postBook(@RequestBody @Valid BookCreationRequest coffee) {
-        return bookService.createBook(coffee);
+    public Book postBook(@RequestBody @Valid BookCreationRequest book) {
+        return bookService.createBook(book);
     }
 
     @GetMapping("/authors")
