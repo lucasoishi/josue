@@ -31,17 +31,46 @@ public class Book {
     @JsonProperty("book_language")
     private Language bookLanguage;
 
-    public Book(){}
-    public Book(String name, String author, Publisher publisher, Integer pages) {
+    public Book() {
+    }
+
+    public Book(
+            String name,
+            String author,
+            Publisher publisher,
+            Integer pages,
+            BigDecimal price,
+            Language bookLanguage,
+            String coverImage,
+            OffsetDateTime publicationDate,
+            boolean published
+    ) {
         this.name = name;
         this.author = author;
         this.publisher = publisher;
         this.pages = pages;
+        this.price = price;
+        this.bookLanguage = bookLanguage;
+        this.coverImage = coverImage;
+        this.publicationDate = publicationDate;
+        this.published = published;
     }
 
     public static Book fromBookCreationRequest(BookCreationRequest bookRequest) {
-        return new Book(bookRequest.getName(), bookRequest.getAuthor(), bookRequest.getPublisher(), bookRequest.getPages());
+        bookRequest.setDefaultsValuesIfNull();
+        return new Book(
+                bookRequest.getName(),
+                bookRequest.getAuthor(),
+                bookRequest.getPublisher(),
+                bookRequest.getPages(),
+                bookRequest.getPrice(),
+                bookRequest.getBookLanguage(),
+                bookRequest.getCoverImage(),
+                bookRequest.getPublicationDate(),
+                bookRequest.isPublished()
+        );
     }
+
 
     public UUID getId() {
         return id;
@@ -115,8 +144,8 @@ public class Book {
         this.coverImage = coverImage;
     }
 
-    public Language getBookLanguage() {
-        return bookLanguage;
+    public String getBookLanguage() {
+        return bookLanguage.toString();
     }
 
     public void setBookLanguage(Language bookLanguage) {

@@ -1,17 +1,71 @@
 package com.gympass.josue.controllers.representations;
 
+import com.gympass.josue.models.Enums.Language;
 import com.gympass.josue.models.Enums.Publisher;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Validated
 public class BookCreationRequest {
     @NotNull
     String name;
+    @NotNull
     String author;
+    @NotNull
     Publisher publisher;
+    @NotNull
     Integer pages;
+    Language bookLanguage;
+    String coverImage;
+    boolean published;
+    OffsetDateTime publicationDate;
+    BigDecimal price;
+
+    public Language getBookLanguage() {
+        return bookLanguage;
+    }
+
+    public void setBookLanguage(Language bookLanguage) {
+        this.bookLanguage = bookLanguage;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+    public OffsetDateTime getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(OffsetDateTime publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+
+
 
     public String getName() {
         return name;
@@ -44,4 +98,14 @@ public class BookCreationRequest {
     public void setPages(Integer pages) {
         this.pages = pages;
     }
+
+    public void setDefaultsValuesIfNull() {
+        if (this.price == null) {
+            this.setPrice(new BigDecimal(0));
+        }
+        if (this.bookLanguage == null) {
+            this.setBookLanguage(Language.UNKNOWN);
+        }
+    }
+
 }

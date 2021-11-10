@@ -1,5 +1,6 @@
 package com.gympass.josue.controllers.contracts;
 
+import com.gympass.josue.controllers.representations.AuthorBooks;
 import com.gympass.josue.controllers.representations.BookCreationRequest;
 import com.gympass.josue.controllers.representations.NameUpdateRequest;
 import com.gympass.josue.models.Book;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,7 +28,11 @@ public interface BookController {
 
     void deleteBook(@PathVariable UUID id);
 
-    public ResponseEntity<?> updateBookName(@PathVariable UUID id,
-                                            @RequestBody NameUpdateRequest update);
+    ResponseEntity<?> updateBookName(@PathVariable UUID id,
+                                     @RequestBody NameUpdateRequest update);
+
+    List<AuthorBooks> booksPerAuthor(@PathVariable String author);
+
+    List<AuthorBooks> booksPerAuthors();
 
 }

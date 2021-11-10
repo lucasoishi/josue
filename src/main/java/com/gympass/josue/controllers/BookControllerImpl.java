@@ -1,6 +1,5 @@
 package com.gympass.josue.controllers;
 
-import com.gympass.josue.controllers.contracts.AuthorsRequest;
 import com.gympass.josue.controllers.contracts.BookController;
 import com.gympass.josue.controllers.representations.AuthorBooks;
 import com.gympass.josue.controllers.representations.BookCreationRequest;
@@ -36,13 +35,19 @@ public class BookControllerImpl implements BookController {
 
     @PostMapping
     public Book postBook(@RequestBody @Valid BookCreationRequest coffee) {
-        return bookService.save(coffee);
+        return bookService.createBook(coffee);
     }
 
     @GetMapping("/authors")
     public List<AuthorBooks> booksPerAuthors() {
         return bookService.listBooksPerAuthors();
     }
+
+    @GetMapping("/authors/{author}")
+    public List<AuthorBooks> booksPerAuthor(@PathVariable String author) {
+        return bookService.listBooksPerAuthor(author);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Optional<Book>> putBook(@PathVariable UUID id,

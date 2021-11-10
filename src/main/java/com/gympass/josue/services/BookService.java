@@ -36,9 +36,9 @@ public class BookService {
                 : new ResponseEntity<>(book, HttpStatus.NOT_FOUND);
     }
 
-    public Book save(BookCreationRequest book) {
-        Book bookObject = Book.fromBookCreationRequest(book);
-        return bookRepository.save(bookObject);
+    public Book createBook(BookCreationRequest bookRequest) {
+        Book book = Book.fromBookCreationRequest(bookRequest);
+        return bookRepository.save(book);
     }
 
     @Transactional
@@ -67,6 +67,17 @@ public class BookService {
 
     public List<AuthorBooks> listBooksPerAuthors() {
         var collection = bookRepository.findAll()
+                .stream()
+                .collect(groupingBy(Book::getAuthor))
+                .entrySet()
+                .stream()
+                .map(e -> new AuthorBooks(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    public List<AuthorBooks> listBooksPerAuthor(String author) {
+        var collection = bookRepository.findByAuthor(author)
                 .stream()
                 .collect(groupingBy(Book::getAuthor))
                 .entrySet()
