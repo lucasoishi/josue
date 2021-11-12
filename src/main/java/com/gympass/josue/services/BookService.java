@@ -1,7 +1,7 @@
 package com.gympass.josue.services;
 
 import com.gympass.josue.controllers.representations.AuthorBooks;
-import com.gympass.josue.controllers.representations.BookCreationRequest;
+import com.gympass.josue.controllers.representations.BookRequest;
 import com.gympass.josue.controllers.representations.NameUpdateRequest;
 import com.gympass.josue.models.Book;
 import com.gympass.josue.repositories.BookRepository;
@@ -29,15 +29,12 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public ResponseEntity<Optional<Book>> listABook(UUID id) {
-        Optional<Book> book = bookRepository.findById(id);
-        return (book.isPresent())
-                ? new ResponseEntity<>(book, HttpStatus.OK)
-                : new ResponseEntity<>(book, HttpStatus.NOT_FOUND);
+    public Optional<Book> listABook(UUID id) {
+        return bookRepository.findById(id);
     }
 
     @Transactional
-    public Book createBook(BookCreationRequest bookRequest) {
+    public Book createBook(BookRequest bookRequest) {
         Book book = Book.fromBookCreationRequest(bookRequest);
         return bookRepository.save(book);
     }
@@ -48,24 +45,19 @@ public class BookService {
     }
 
     @Transactional
-    public ResponseEntity<Optional<Book>> createOrUpdateBook(UUID id, Book book) {
-        book.setId(id);
-        return (bookRepository.existsById(id))
-                ? new ResponseEntity<>(Optional.of(bookRepository.save(book)), HttpStatus.OK)
-                : new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND);
+    public Optional<Book> updateBookAttributes(UUID id, BookRequest bookRequest) {
+        var book =  bookRepository.findById(id);
+        if (book.isPresent()) {
+            var bookToSave = Book.fromBookCreationRequest(bookRequest);
+            bookToSave.setId(id);
+         return Optional.of(bookRepository.save(bookToSave));
+        }
+        return Optional.empty();
     }
 
     @Transactional
-    public ResponseEntity<?> updateBookName(UUID id, NameUpdateRequest update) {
-        var book = bookRepository.findById(id);
-        if (book.isPresent()) {
-            var bookToSave = book.get();
-            bookToSave.setName(update.getName());
-            bookRepository.save(bookToSave);
-            return new ResponseEntity<>(bookToSave, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND);
-        }
+    public Optional<Book> updateBookName(UUID id, NameUpdateRequest update) {
+        return bookRepository.findById(id).map(b -> updateBookName(b, update.getName())).or(Optional::empty);
     }
 
     public List<AuthorBooks> listBooksPerAuthors() {
@@ -88,5 +80,9 @@ public class BookService {
                 .map(e -> new AuthorBooks(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
         return collection;
+    }
+    private Book updateBookName(Book book, String name) {
+        book.setName(name);
+        return book;
     }
 }

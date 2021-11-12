@@ -3,6 +3,7 @@ package com.gympass.josue.controllers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gympass.josue.controllers.representations.BookRequest;
 import com.gympass.josue.models.Book;
 import com.gympass.josue.models.Enums.Language;
 import com.gympass.josue.models.Enums.Publisher;
@@ -18,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -117,11 +120,24 @@ public class BookControllerImplTest {
 
     @Test
     public void shouldReturnOkWhenListingBooksPerAuthors() throws Exception {
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false));
         }
-        var result = mockMvc.perform(
+        mockMvc.perform(
                 get("/books/authors/author")
         ).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void shouldReturnOkWhenUpdatingABooksAttributes() throws Exception {
+        var bookId = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false)).getId();
+        var bookRequest = new Book("name 2", "author 2", Publisher.PUBLISHER_B, 100, BigDecimal.valueOf(123.55), Language.GE, "https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg", OffsetDateTime.now(), true);
+        var payload = objectMapper.writeValueAsString(bookRequest);
+        mockMvc.perform(
+                put("/books/" + bookId).contentType(MediaType.APPLICATION_JSON).content(payload)).
+                andExpect(MockMvcResultMatchers.status().isOk());
+        bookRequest.setId(bookId);
+        var newBook = repository.findById(bookId).get();
+        assertThat(objectMapper.writeValueAsString(newBook)).isEqualTo(objectMapper.writeValueAsString(bookRequest));
     }
 }

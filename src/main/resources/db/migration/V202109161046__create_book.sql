@@ -8,5 +8,5 @@ CREATE TABLE book (
     publication_date TIMESTAMP,
     published BOOL,
     cover_image TEXT,
-    book_language VARCHAR(100)
+    book_language VARCHAR(100) NOT NULL
 );

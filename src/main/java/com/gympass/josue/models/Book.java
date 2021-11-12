@@ -1,7 +1,7 @@
 package com.gympass.josue.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gympass.josue.controllers.representations.BookCreationRequest;
+import com.gympass.josue.controllers.representations.BookRequest;
 import com.gympass.josue.models.Enums.Language;
 import com.gympass.josue.models.Enums.Publisher;
 
@@ -56,7 +56,7 @@ public class Book {
         this.published = published;
     }
 
-    public static Book fromBookCreationRequest(BookCreationRequest bookRequest) {
+    public static Book fromBookCreationRequest(BookRequest bookRequest) {
         bookRequest.setDefaultsValuesIfNull();
         return new Book(
                 bookRequest.getName(),

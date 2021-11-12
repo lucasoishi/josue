@@ -2,10 +2,11 @@ package com.gympass.josue.controllers;
 
 import com.gympass.josue.controllers.contracts.BookController;
 import com.gympass.josue.controllers.representations.AuthorBooks;
-import com.gympass.josue.controllers.representations.BookCreationRequest;
+import com.gympass.josue.controllers.representations.BookRequest;
 import com.gympass.josue.controllers.representations.NameUpdateRequest;
 import com.gympass.josue.models.Book;
 import com.gympass.josue.services.BookService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +31,15 @@ public class BookControllerImpl implements BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Book>> getBookById(@PathVariable UUID id) {
-        return bookService.listABook(id);
+        var book =  bookService.listABook(id);
+        var httpStatus =book.map(
+                b -> HttpStatus.OK
+        ).orElse(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(book, httpStatus);
     }
 
     @PostMapping
-    public Book postBook(@RequestBody @Valid BookCreationRequest book) {
+    public Book postBook(@RequestBody @Valid BookRequest book) {
         return bookService.createBook(book);
     }
 
@@ -48,17 +53,21 @@ public class BookControllerImpl implements BookController {
         return bookService.listBooksPerAuthor(author);
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<Optional<Book>> putBook(@PathVariable UUID id,
-                                                  @Valid @RequestBody Book book) {
-        return bookService.createOrUpdateBook(id, book);
+                                  @Valid @RequestBody BookRequest bookRequest) {
+        var book =  bookService.updateBookAttributes(id, bookRequest);
+        var httpStatus =book.map(
+                b -> HttpStatus.OK
+        ).orElse(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(book, httpStatus);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateBookName(@PathVariable UUID id,
                                             @RequestBody NameUpdateRequest update) {
-        return bookService.updateBookName(id, update);
+        bookService.updateBookName(id, update);
+        return new ResponseEntity<>(Optional.empty(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

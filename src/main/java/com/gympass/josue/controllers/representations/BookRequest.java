@@ -1,26 +1,33 @@
 package com.gympass.josue.controllers.representations;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gympass.josue.models.Enums.Language;
 import com.gympass.josue.models.Enums.Publisher;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Validated
-public class BookCreationRequest {
+public class BookRequest {
     @NotNull
+    @NotBlank
     String name;
     @NotNull
+    @NotBlank
     String author;
     @NotNull
     Publisher publisher;
     @NotNull
     Integer pages;
+    @JsonProperty("book_language")
     Language bookLanguage;
+    @JsonProperty("cover_image")
     String coverImage;
     boolean published;
+    @JsonProperty("publication_date")
     OffsetDateTime publicationDate;
     BigDecimal price;
 

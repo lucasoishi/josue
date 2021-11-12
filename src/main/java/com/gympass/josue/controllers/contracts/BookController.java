@@ -1,7 +1,7 @@
 package com.gympass.josue.controllers.contracts;
 
 import com.gympass.josue.controllers.representations.AuthorBooks;
-import com.gympass.josue.controllers.representations.BookCreationRequest;
+import com.gympass.josue.controllers.representations.BookRequest;
 import com.gympass.josue.controllers.representations.NameUpdateRequest;
 import com.gympass.josue.models.Book;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,10 @@ public interface BookController {
 
     ResponseEntity<Optional<Book>> getBookById(@PathVariable UUID id);
 
-    Book postBook(@RequestBody @Valid BookCreationRequest book);
+    Book postBook(@RequestBody @Valid BookRequest book);
 
     ResponseEntity<Optional<Book>> putBook(@PathVariable UUID id,
-                                           @Valid @RequestBody Book book);
+                                           @Valid @RequestBody BookRequest bookRequest);
 
     void deleteBook(@PathVariable UUID id);
 
