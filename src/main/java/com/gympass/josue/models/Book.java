@@ -17,19 +17,19 @@ import java.util.UUID;
 public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private UUID id;
-    private String name;
-    private String author;
-    private Publisher publisher;
-    private Integer pages;
-    private BigDecimal price;
+    protected UUID id;
+    protected String name;
+    protected String author;
+    protected Publisher publisher;
+    protected Integer pages;
+    protected BigDecimal price;
     @JsonProperty("publication_date")
-    private OffsetDateTime publicationDate;
-    private boolean published;
+    protected OffsetDateTime publicationDate;
+    protected boolean published;
     @JsonProperty("cover_image")
-    private String coverImage;
+    protected String coverImage;
     @JsonProperty("book_language")
-    private Language bookLanguage;
+    protected Language bookLanguage;
 
     public Book() {
     }
@@ -144,8 +144,8 @@ public class Book {
         this.coverImage = coverImage;
     }
 
-    public String getBookLanguage() {
-        return bookLanguage.toString();
+    public Language getBookLanguage() {
+        return bookLanguage;
     }
 
     public void setBookLanguage(Language bookLanguage) {

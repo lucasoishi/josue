@@ -1,16 +1,13 @@
 package com.gympass.josue.controllers;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gympass.josue.controllers.representations.BookRequest;
+import com.gympass.josue.controllers.representations.BookResponse;
 import com.gympass.josue.models.Book;
 import com.gympass.josue.models.Enums.Language;
 import com.gympass.josue.models.Enums.Publisher;
 import com.gympass.josue.repositories.BookRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -44,11 +42,11 @@ public class BookControllerImplTest {
     @Test
     public void shouldReturnOKWhenListingAnExistingBook() throws Exception {
         var book = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false));
-        var jsonBook = objectMapper.writeValueAsString(book);
+        var jsonBook = objectMapper.writeValueAsString(BookResponse.fromBook(book));
         mockMvc.perform(
-                get("/books/" + book.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isOk())
+                        get("/books/" + book.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(jsonBook));
     }
 
@@ -76,7 +74,7 @@ public class BookControllerImplTest {
                 post("/books/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBook)
-        ).andExpect(MockMvcResultMatchers.status().isOk());
+        ).andExpect(MockMvcResultMatchers.status().isCreated());
         var bookSaved = repository.findByName(book.getName());
         assertThat(bookSaved).isNotNull();
         assertThat(bookSaved).hasSize(1);
@@ -99,10 +97,10 @@ public class BookControllerImplTest {
         var new_name = "name 2";
         var payload = "{\"name\": \"" + new_name + "\"}";
         mockMvc.perform(
-                patch("/books/" + book.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(payload)
-        ).andExpect(MockMvcResultMatchers.status().isOk())
+                        patch("/books/" + book.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(payload)
+                ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(payload));
         assertThat(repository.findById(book.getId()).get().getName()).isEqualTo(new_name);
     }
@@ -119,22 +117,12 @@ public class BookControllerImplTest {
     }
 
     @Test
-    public void shouldReturnOkWhenListingBooksPerAuthors() throws Exception {
-        for (int i = 0; i < 5; i++) {
-            repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false));
-        }
-        mockMvc.perform(
-                get("/books/authors/author")
-        ).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     public void shouldReturnOkWhenUpdatingABooksAttributes() throws Exception {
         var bookId = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false)).getId();
         var bookRequest = new Book("name 2", "author 2", Publisher.PUBLISHER_B, 100, BigDecimal.valueOf(123.55), Language.GE, "https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg", OffsetDateTime.now(), true);
         var payload = objectMapper.writeValueAsString(bookRequest);
         mockMvc.perform(
-                put("/books/" + bookId).contentType(MediaType.APPLICATION_JSON).content(payload)).
+                        put("/books/" + bookId).contentType(MediaType.APPLICATION_JSON).content(payload)).
                 andExpect(MockMvcResultMatchers.status().isOk());
         bookRequest.setId(bookId);
         var newBook = repository.findById(bookId).get();

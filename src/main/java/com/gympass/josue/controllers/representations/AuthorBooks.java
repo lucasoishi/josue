@@ -5,19 +5,19 @@ import com.gympass.josue.models.Book;
 import java.util.List;
 
 public class AuthorBooks {
-    private List<Book> books;
+    private List<BookResponse> books;
     private String author;
 
-    public AuthorBooks(String author, List<Book> books) {
+    public AuthorBooks(String author, List<BookResponse> books) {
         this.author = author;
         this.books = books;
     }
 
-    public List<Book> getBooks() {
+    public List<BookResponse> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(List<BookResponse> books) {
         this.books = books;
     }
 
