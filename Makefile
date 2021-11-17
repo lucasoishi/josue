@@ -13,6 +13,12 @@ clean:
 test:
 	@./gradlew test
 
+run:
+	@./gradlew run
+
+build:
+	@./gradlew build
+
 test-cov:
 	@./gradlew jacocoTestReport jacocoTestCoverageVerification
 	@echo "Report available in ${DIR}/build/reports/jacoco/test/html/index.html"
