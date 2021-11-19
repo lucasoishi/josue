@@ -41,7 +41,7 @@ public class AuthorControllerImplTest {
     @Test
     public void shouldReturnOkWhenListingBooksPerAuthors() throws Exception {
         for (int i = 0; i < 5; i++) {
-            repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false));
+            repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, null, false, null, Language.UNKNOWN));
         }
         mockMvc.perform(
                 get("/authors/books")
@@ -52,7 +52,7 @@ public class AuthorControllerImplTest {
     public void shouldReturnOkWhenListingBooksPerAuthor() throws Exception {
         var authorName = UUID.randomUUID();
         for (int i = 0; i < 5; i++) {
-            repository.save(new Book("name", "author x", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false));
+            repository.save(new Book("name", "author x", Publisher.PUBLISHER_A, 125, null, null, false, null, Language.UNKNOWN));
         }
         mockMvc.perform(
                         get("/authors/" + authorName + "/books")

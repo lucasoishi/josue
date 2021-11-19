@@ -1,13 +1,7 @@
 package com.gympass.josue.controllers.representations;
 
-public class NameUpdateRequest {
-    public String getName() {
-        return name;
-    }
+import lombok.Data;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+public @Data class NameUpdateRequest {
     private String name;
 }

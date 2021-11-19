@@ -41,7 +41,7 @@ public class BookControllerImplTest {
 
     @Test
     public void shouldReturnOKWhenListingAnExistingBook() throws Exception {
-        var book = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false));
+        var book = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, null, false, null, Language.UNKNOWN));
         var jsonBook = objectMapper.writeValueAsString(BookResponse.fromBook(book));
         mockMvc.perform(
                         get("/books/" + book.getId())
@@ -68,7 +68,7 @@ public class BookControllerImplTest {
 
     @Test
     public void shouldReturnOKWhenCreatingABook() throws Exception {
-        var book = new Book("name123", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false);
+        var book = new Book("name123", "author", Publisher.PUBLISHER_A, 125, null, null, false, null, Language.UNKNOWN);
         var jsonBook = objectMapper.writeValueAsString(book);
         mockMvc.perform(
                 post("/books/")
@@ -93,7 +93,7 @@ public class BookControllerImplTest {
 
     @Test
     public void shouldReturnOkAndCorrectlyUpdateName() throws Exception {
-        var book = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false));
+        var book = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, null, false, null, Language.UNKNOWN));
         var new_name = "name 2";
         var payload = "{\"name\": \"" + new_name + "\"}";
         mockMvc.perform(
@@ -118,8 +118,8 @@ public class BookControllerImplTest {
 
     @Test
     public void shouldReturnOkWhenUpdatingABooksAttributes() throws Exception {
-        var bookId = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, Language.UNKNOWN, null, null, false)).getId();
-        var bookRequest = new Book("name 2", "author 2", Publisher.PUBLISHER_B, 100, BigDecimal.valueOf(123.55), Language.GE, "https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg", OffsetDateTime.now(), true);
+        var bookId = repository.save(new Book("name", "author", Publisher.PUBLISHER_A, 125, null, null, false, null, Language.UNKNOWN)).getId();
+        var bookRequest = new Book("name 2", "author 2", Publisher.PUBLISHER_B, 100, BigDecimal.valueOf(123.55), OffsetDateTime.now(), true, "https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg", Language.GE);
         var payload = objectMapper.writeValueAsString(bookRequest);
         mockMvc.perform(
                         put("/books/" + bookId).contentType(MediaType.APPLICATION_JSON).content(payload)).
