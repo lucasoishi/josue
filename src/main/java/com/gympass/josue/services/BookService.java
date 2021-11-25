@@ -46,12 +46,11 @@ public class BookService {
     @Transactional
     public Optional<BookResponse> updateBookAttributes(UUID id, BookRequest bookRequest) {
         var book = bookRepository.findById(id);
-        if (book.isPresent()) {
+        return book.map(b -> {
             var bookToSave = Book.fromBookCreationRequest(bookRequest);
             bookToSave.setId(id);
-            return Optional.of(BookResponse.fromBook(bookRepository.save(bookToSave)));
-        }
-        return Optional.empty();
+            return BookResponse.fromBook(bookRepository.save(bookToSave));
+        }).or(Optional::empty);
     }
 
     @Transactional
