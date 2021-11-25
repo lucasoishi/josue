@@ -23,12 +23,9 @@ public class Book {
     protected Publisher publisher;
     protected Integer pages;
     protected BigDecimal price;
-    @JsonProperty("publication_date")
     protected OffsetDateTime publicationDate;
     protected boolean published;
-    @JsonProperty("cover_image")
     protected String coverImage;
-    @JsonProperty("book_language")
     protected Language bookLanguage;
 
     public Book() {
