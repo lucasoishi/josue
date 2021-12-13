@@ -1,0 +1,20 @@
+version: '2.1'
+
+services:
+  books-db:
+    image: postgres:12.3-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=josue
+    ports:
+      - 15432:5432
+
+  books-db-test:
+    image: postgres:12.3-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=josue
+    ports:
+      - 25432:5432
