@@ -4,11 +4,19 @@ import com.gympass.josue.controllers.contracts.BookController;
 import com.gympass.josue.controllers.representations.BookRequest;
 import com.gympass.josue.controllers.representations.BookResponse;
 import com.gympass.josue.controllers.representations.NameUpdateRequest;
-import com.gympass.josue.models.Book;
 import com.gympass.josue.services.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -31,9 +39,9 @@ public class BookControllerImpl implements BookController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<BookResponse>> getBookById(@PathVariable UUID id) {
         var book = bookService.listABook(id);
-        var httpStatus = book.map(
-                b -> HttpStatus.OK
-        ).orElse(HttpStatus.NOT_FOUND);
+        var httpStatus = book
+                .map(b -> HttpStatus.OK)
+                .orElse(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(book, httpStatus);
     }
 
@@ -45,18 +53,23 @@ public class BookControllerImpl implements BookController {
     @PutMapping("/{id}")
     public ResponseEntity<Optional<BookResponse>> putBook(@PathVariable UUID id,
                                                   @Valid @RequestBody BookRequest bookRequest) {
-        return bookService.updateBookAttributes(id, bookRequest).map(
-                b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK)).orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
+        return bookService
+                .updateBookAttributes(id, bookRequest)
+                .map(b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
     }
 
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PatchMapping("/{id}")
     public ResponseEntity<Optional<BookResponse>> updateBookName(@PathVariable UUID id,
-                                                         @RequestBody NameUpdateRequest update) {
-        return bookService.updateBookName(id, update).map(b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK)).orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
+                                                         @Valid @RequestBody NameUpdateRequest update) {
+        return bookService
+                .updateBookName(id, update)
+                .map(b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
     }
 
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable UUID id) {
-        bookService.deleteById(id);
-    }
+    public void deleteBook(@PathVariable UUID id) {bookService.deleteById(id);}
 }

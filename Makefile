@@ -2,7 +2,7 @@ DOCKER_COMPOSE_CMD=docker-compose
 DIR=$(shell pwd)
 
 up:
-	@$(DOCKER_COMPOSE_CMD) up
+	@$(DOCKER_COMPOSE_CMD) up -d
 
 down:
 	@$(DOCKER_COMPOSE_CMD) down
