@@ -25,11 +25,11 @@ public interface BookController {
     ResponseEntity<BookResponse> postBook(@RequestBody @Valid BookRequest book);
 
     ResponseEntity<Optional<BookResponse>> putBook(@PathVariable UUID id,
-                                           @Valid @RequestBody BookRequest bookRequest);
+                                                   @Valid @RequestBody BookRequest bookRequest);
 
     void deleteBook(@PathVariable UUID id);
 
     ResponseEntity<Optional<BookResponse>> updateBookName(@PathVariable UUID id,
-                                     @RequestBody NameUpdateRequest update);
+                                                          @Valid @RequestBody NameUpdateRequest update);
 
 }

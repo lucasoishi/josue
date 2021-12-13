@@ -31,9 +31,8 @@ public class BookControllerImpl implements BookController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<BookResponse>> getBookById(@PathVariable UUID id) {
         var book = bookService.listABook(id);
-        var httpStatus = book.map(
-                b -> HttpStatus.OK
-        ).orElse(HttpStatus.NOT_FOUND);
+        var httpStatus = book.map(b -> HttpStatus.OK)
+                .orElse(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(book, httpStatus);
     }
 
@@ -44,17 +43,22 @@ public class BookControllerImpl implements BookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Optional<BookResponse>> putBook(@PathVariable UUID id,
-                                                  @Valid @RequestBody BookRequest bookRequest) {
-        return bookService.updateBookAttributes(id, bookRequest).map(
-                b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK)).orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
+                                                          @Valid @RequestBody BookRequest bookRequest) {
+        return bookService.updateBookAttributes(id, bookRequest)
+                .map(b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @PatchMapping("/{id}")
     public ResponseEntity<Optional<BookResponse>> updateBookName(@PathVariable UUID id,
-                                                         @RequestBody NameUpdateRequest update) {
-        return bookService.updateBookName(id, update).map(b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK)).orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
+                                                                 @Valid @RequestBody NameUpdateRequest update) {
+        return bookService.updateBookName(id, update)
+                .map(b -> new ResponseEntity<>(Optional.of(b), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable UUID id) {
         bookService.deleteById(id);
